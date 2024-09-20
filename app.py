@@ -55,7 +55,7 @@ def index():
         data = get_weather_data(city)
         if data:
             weather_data.append(data)
-    return render_template('weather.html', weather_data=weather_data)
+    return render_template('index.html', weather_data=weather_data)
 
 @app.route('/add', methods=['POST'])
 def add_city():
