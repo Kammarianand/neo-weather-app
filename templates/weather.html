@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoWeather</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .neon-border {
+            box-shadow: 0 0 5px theme('colors.blue.400'), 0 0 10px theme('colors.blue.400'), 0 0 15px theme('colors.blue.400');
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen font-sans" x-data="{ showProjectInfo: false }">
+    <div class="container mx-auto px-4 py-8 max-w-lg">
+        <h1 class="text-5xl sm:text-5xl font-bold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">NeoWeather</h1>
+        
+        <div class="mb-8">
+            <form class="flex flex-col sm:flex-row mb-4 gap-2" action="{{ url_for('add_city') }}" method="POST">
+                <input type="text" name="city" placeholder="Enter a city name" required
+                       class="flex-grow p-3 rounded-lg sm:rounded-l-lg sm:rounded-r-none bg-gray-800 border-2 border-blue-500 focus:outline-none focus:border-purple-500 text-gray-100 placeholder-gray-400">
+                <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg sm:rounded-l-none sm:rounded-r-lg transition duration-300 border-2 border-blue-500">
+                    Add City
+                </button>
+            </form>
+            <button @click="showProjectInfo = true"
+                    class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 border-2 border-purple-500">
+                About Project
+            </button>
+        </div>
+
+        <div class="space-y-6" x-show="!showProjectInfo" x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 transform scale-90"
+             x-transition:enter-end="opacity-100 transform scale-100"
+             x-transition:leave="transition ease-in duration-300"
+             x-transition:leave-start="opacity-100 transform scale-100"
+             x-transition:leave-end="opacity-0 transform scale-90">
+            {% for weather in weather_data %}
+            <div class="bg-gray-800 rounded-xl p-6 shadow-lg border-2 border-blue-500 transform transition duration-500 hover:scale-105 hover:border-purple-500 neon-border">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-semibold text-blue-400">{{ weather.city }}</h2>
+                    <img src="http://openweathermap.org/img/w/{{ weather.icon }}.png" alt="Weather icon" class="w-16 h-16">
+                </div>
+                <p class="text-4xl font-bold mb-2 text-purple-400">{{ weather.temperature }}°F</p>
+                <p class="text-lg text-gray-300">{{ weather.description }}</p>
+                <div class="mt-4 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded animate-pulse"></div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div x-show="showProjectInfo" x-cloak
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 transform scale-90"
+             x-transition:enter-end="opacity-100 transform scale-100"
+             x-transition:leave="transition ease-in duration-300"
+             x-transition:leave-start="opacity-100 transform scale-100"
+             x-transition:leave-end="opacity-0 transform scale-90"
+             class="bg-gray-800 rounded-xl p-6 shadow-lg border-2 border-purple-500 neon-border">
+            <h2 class="text-2xl font-bold mb-4 text-purple-400">About NeoWeather</h2>
+            <p class="mb-4 text-gray-300">NeoWeather is a futuristic Flask-based web application that provides real-time weather data for multiple cities using the OpenWeatherMap API.</p>
+            <h3 class="text-xl font-semibold mb-2 text-blue-400">Tech Stack:</h3>
+            <ul class="list-disc list-inside mb-4 text-gray-300">
+                <li>Python & Flask</li>
+                <li>OpenWeatherMap API</li>
+                <li>TailwindCSS & Alpine.js</li>
+            </ul>
+            <h3 class="text-xl font-semibold mb-2 text-blue-400">Features:</h3>
+            <ul class="list-disc list-inside mb-4 text-gray-300">
+                <li>Multi-city weather tracking</li>
+                <li>Responsive, futuristic design</li>
+                <li>Real-time data updates</li>
+            </ul>
+            <button @click="showProjectInfo = false"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 border-2 border-blue-500">
+                Back to Weather
+            </button>
+        </div>
+    </div>
+</body>
+</html>
